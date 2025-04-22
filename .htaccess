@@ -1,0 +1,23 @@
+# .htaccess for Node.js App on cPanel
+
+PassengerAppRoot /home/your-cpanel-username/path-to-your-app-folder
+PassengerNodejs /opt/cpanel/ea-nodejs20/bin/node
+PassengerAppType node
+PassengerStartupFile server.js
+
+# Let Apache know to pass requests to Passenger
+<IfModule mod_passenger.c>
+  PassengerEnabled on
+</IfModule>
+
+# Rewrite all requests to Node.js app
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+
+# Optional - Cache & CORS headers
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+</IfModule>
