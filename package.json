@@ -7,6 +7,10 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint"
+  }, "overrides": {
+    "react-day-picker": {
+      "date-fns": "$date-fns"
+    }
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
