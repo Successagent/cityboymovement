@@ -1,55 +1,55 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Calendar, Clock, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { CountdownTimer } from "@/components/countdown-timer"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Calendar, Clock, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CountdownTimer } from "@/components/countdown-timer";
 
 interface Event {
-  id: string
-  title: string
-  description: string
-  date: string
-  time: string
-  location: string
-  imageUrl: string
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  imageUrl: string;
 }
 
 export function EventBanner() {
-  const [event, setEvent] = useState<Event | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [event, setEvent] = useState<Event | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchUpcomingEvent = async () => {
       try {
-        setIsLoading(true)
-        const response = await fetch("/api/events/upcoming")
+        setIsLoading(true);
+        const response = await fetch("/api/events/upcoming");
 
         if (!response.ok) {
-          throw new Error("Failed to fetch upcoming event")
+          throw new Error("Failed to fetch upcoming event");
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
         if (data.success && data.event) {
-          setEvent(data.event)
+          setEvent(data.event);
         } else {
-          setError(data.message || "No upcoming events found")
+          setError(data.message || "No upcoming events found");
         }
       } catch (err) {
-        console.error("Error fetching upcoming event:", err)
-        setError("Could not load upcoming event")
+        console.error("Error fetching upcoming event:", err);
+        setError("Could not load upcoming event");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchUpcomingEvent()
-  }, [])
+    fetchUpcomingEvent();
+  }, []);
 
   if (isLoading) {
     return (
@@ -57,19 +57,21 @@ export function EventBanner() {
         <div className="container mx-auto px-4">
           <div className="h-64 flex items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#0F5D0B] border-t-transparent"></div>
-            <span className="ml-2 text-[#0F5D0B]">Loading upcoming event...</span>
+            <span className="ml-2 text-[#0F5D0B]">
+              Loading upcoming event...
+            </span>
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   if (error || !event) {
-    return null // Don't show the section if there's no event
+    return null; // Don't show the section if there's no event
   }
 
   // Parse the event date for the countdown
-  const eventDate = new Date(`${event.date}T${event.time.split(" - ")[0]}`)
+  const eventDate = new Date(`${event.date}T${event.time.split(" - ")[0]}`);
 
   return (
     <section className="w-full bg-gradient-to-r from-[#0F5D0B]/10 to-[#0F5D0B]/5 py-12">
@@ -89,7 +91,9 @@ export function EventBanner() {
             {/* Event Details */}
             <CardContent className="p-6 md:p-8 flex flex-col justify-between">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-[#0F5D0B] mb-3">{event.title}</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-[#0F5D0B] mb-3">
+                  {event.title}
+                </h2>
                 <p className="text-gray-700 mb-6">{event.description}</p>
 
                 <div className="space-y-3">
@@ -124,7 +128,9 @@ export function EventBanner() {
                 </div>
 
                 <Link href={`/events/${event.id}`}>
-                  <Button className="w-full bg-[#0F5D0B] hover:bg-[#0A4A08]">View Event Details</Button>
+                  <Button className="w-full bg-[#0F5D0B] hover:bg-[#0A4A08]">
+                    View Event Details
+                  </Button>
                 </Link>
               </div>
             </CardContent>
@@ -132,6 +138,5 @@ export function EventBanner() {
         </Card>
       </div>
     </section>
-  )
+  );
 }
-
